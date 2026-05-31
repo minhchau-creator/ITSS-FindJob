@@ -9,6 +9,7 @@ export const getUserInfo = async (req: Request, res: Response) => {
     const user = await User.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
+      return;
     }
     res.status(200).json(user);
   } catch (error) {
@@ -53,6 +54,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 
     if (!updatedUser) {
       res.status(404).json({ message: "User not found" });
+      return;
     }
 
     res.status(200).json(updatedUser);
@@ -64,44 +66,55 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 
 //[GET]/api/v1/users/:id/suggested-jobs
 export const suggestJobs = async (req: Request, res: Response) => {
-  const jobs = await Job.find({ deleted: false });
-  const userId = req.params.id;
-  const user = await User.findById(userId);
-  const scoredJobs = jobs.map((job) => {
-    let score = 0;
+  try {
+    const jobs = await Job.find({ deleted: false });
+    const userId = req.params.id;
+    const user = await User.findById(userId);
 
-    if (user.jobType && job.jobType === user.jobType) score += 2;
-    if (user.jobForm && job.jobForm === user.jobForm) score += 2;
-
-    if (
-      user.desiredJob &&
-      job.title.toLowerCase().includes(user.desiredJob.toLowerCase())
-    ) {
-      score += 3;
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
     }
 
-    const userSchedule = user.workingSchedule || [];
-    const jobSchedule = job.workingSchedule || [];
+    const scoredJobs = jobs.map((job) => {
+      let score = 0;
 
-    const matchingSchedules = userSchedule.filter((uSlot) =>
-      jobSchedule.some(
-        (jSlot) => jSlot.day === uSlot.day && jSlot.period === uSlot.period
-      )
-    );
+      if (user.jobType && job.jobType === user.jobType) score += 2;
+      if (user.jobForm && job.jobForm === user.jobForm) score += 2;
 
-    score += matchingSchedules.length;
+      if (
+        user.desiredJob &&
+        job.title.toLowerCase().includes(user.desiredJob.toLowerCase())
+      ) {
+        score += 3;
+      }
 
-    return {
-      job,
-      score,
-    };
-  });
+      const userSchedule = user.workingSchedule || [];
+      const jobSchedule = job.workingSchedule || [];
 
-  scoredJobs.sort((a, b) => b.score - a.score);
+      const matchingSchedules = userSchedule.filter((uSlot) =>
+        jobSchedule.some(
+          (jSlot) => jSlot.day === uSlot.day && jSlot.period === uSlot.period
+        )
+      );
 
-  const topJobs = scoredJobs.slice(0, 10);
-  const result = topJobs.map((entry) => entry.job);
-  res.status(200).json(result);
+      score += matchingSchedules.length;
+
+      return {
+        job,
+        score,
+      };
+    });
+
+    scoredJobs.sort((a, b) => b.score - a.score);
+
+    const topJobs = scoredJobs.slice(0, 10);
+    const result = topJobs.map((entry) => entry.job);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Suggest Jobs Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 //[GET]/api/v1/users/:id/get-jtype-list

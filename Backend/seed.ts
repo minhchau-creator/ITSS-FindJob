@@ -18,10 +18,15 @@ function isLocalMongoUrl(url: string): boolean {
 }
 
 function findMongoExecutable(): string | null {
-  const windowsPath = "C:\\Program Files\\MongoDB\\Server\\8.0\\bin\\mongod.exe";
-  if (fs.existsSync(windowsPath)) {
-    return windowsPath;
-  }
+  // Danh sách các đường dẫn phổ biến để tăng tính linh hoạt
+  const commonPaths = [
+    "C:\\Program Files\\MongoDB\\Server\\8.0\\bin\\mongod.exe",
+    "C:\\Program Files\\MongoDB\\Server\\7.0\\bin\\mongod.exe",
+    "C:\\Program Files\\MongoDB\\Server\\6.0\\bin\\mongod.exe",
+  ];
+
+  const foundPath = commonPaths.find(p => fs.existsSync(p));
+  if (foundPath) return foundPath;
 
   return null;
 }
