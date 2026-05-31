@@ -265,3 +265,22 @@
     width: 80px;
   }
 }
+/* Tiêu đề từng mục (đồng nhất theme tím hệ thống) */
+.section-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #6300b3;
+  margin: 10px 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f1e0ff;
+}
+
+.dropdown-empty {
+  color: #999;
+  cursor: default;
+}
+
+.dropdown-empty:hover {
+  background-color: transparent;
+  color: #999;
+}

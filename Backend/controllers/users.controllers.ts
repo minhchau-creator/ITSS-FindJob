@@ -1,12 +1,20 @@
 import { Request, Response } from "express";
 import User from "../models/user.models";
 import Job from "../models/jobs.models";
+import mongoose from "mongoose";
 
 //[GET]/api/v1/users
 export const getUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      res.status(400).json({ message: "Invalid User ID format" });
+      return;
+    }
+
     const user = await User.findById(userId);
+
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -23,6 +31,11 @@ export const updateUserInfo = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
 
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      res.status(400).json({ message: "Invalid User ID format" });
+      return;
+    }
+
     const {
       name,
       email,
@@ -35,6 +48,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
       category,
       workingSchedule,
     } = req.body;
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
@@ -49,7 +63,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
         category,
         workingSchedule,
       },
-      { new: true, upsert: true }
+      { new: true } // Removed upsert: true to prevent accidental creation
     );
 
     if (!updatedUser) {
@@ -67,8 +81,14 @@ export const updateUserInfo = async (req: Request, res: Response) => {
 //[GET]/api/v1/users/:id/suggested-jobs
 export const suggestJobs = async (req: Request, res: Response) => {
   try {
-    const jobs = await Job.find({ deleted: false });
     const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      res.status(400).json({ message: "Invalid User ID format" });
+      return;
+    }
+
+    const jobs = await Job.find({ deleted: false });
     const user = await User.findById(userId);
 
     if (!user) {

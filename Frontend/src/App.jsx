@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import JobDetail from "./pages/JobDetail";
 import JobList from "./pages/JobList";
-import Profile from "./pages/Profile";
+import Profile from "./pages/Profile/Profile";
 
 const App = () => {
   return (
