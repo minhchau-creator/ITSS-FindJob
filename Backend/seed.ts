@@ -5,6 +5,7 @@ import { spawn } from "child_process";
 import mongoose from "mongoose";
 import Job from "./models/jobs.models";
 import User from "./models/user.models";
+import Review from "./models/review.models";
 
 dotenv.config();
 
@@ -322,16 +323,80 @@ const users = [
   },
 ];
 
+const reviews = (jobs: any[], users: any[]) => [
+  {
+    jobId: jobs[0]._id,
+    userId: users[0]._id,
+    rating: 5,
+    comment: "Công việc rất phù hợp, môi trường làm việc thân thiện. Sẽ giới thiệu cho bạn bè.",
+  },
+  {
+    jobId: jobs[0]._id,
+    userId: users[1]._id,
+    rating: 4,
+    comment: "Lịch làm việc linh hoạt, phù hợp với sinh viên đi học.",
+  },
+  {
+    jobId: jobs[1]._id,
+    userId: users[0]._id,
+    rating: 5,
+    comment: "Chủ quán vui vẻ, đồng nghiệp hòa đồng. Được làm thêm giờ nếu muốn.",
+  },
+  {
+    jobId: jobs[1]._id,
+    userId: users[1]._id,
+    rating: 3,
+    comment: "Công việc ổn, lương đúng hạn nhưng hơi xa nhà.",
+  },
+  {
+    jobId: jobs[2]._id,
+    userId: users[0]._id,
+    rating: 4,
+    comment: "Môi trường chuyên nghiệp, được học hỏi nhiều công nghệ mới.",
+  },
+  {
+    jobId: jobs[2]._id,
+    userId: users[1]._id,
+    rating: 5,
+    comment: "Team leader nhiệt tình hướng dẫn, phù hợp cho intern.",
+  },
+  {
+    jobId: jobs[3]._id,
+    userId: users[0]._id,
+    rating: 4,
+    comment: "Công việc nhẹ nhàng, có thể làm tại nhà. Tuyệt vời!",
+  },
+  {
+    jobId: jobs[4]._id,
+    userId: users[1]._id,
+    rating: 5,
+    comment: "Phòng gym đẹp, khách hàng thân thiện. Rất thích công việc này.",
+  },
+  {
+    jobId: jobs[5]._id,
+    userId: users[0]._id,
+    rating: 3,
+    comment: "Lương cơ bản ổn, nhưng ca xoay hơi mệt.",
+  },
+  {
+    jobId: jobs[5]._id,
+    userId: users[1]._id,
+    rating: 4,
+    comment: "Quản lý hỗ trợ tốt, có thưởng thêm vào dịp lễ.",
+  },
+];
+
 async function seed() {
   try {
     await connectWithLocalFallback();
 
-    await Promise.all([Job.deleteMany({}), User.deleteMany({})]);
+    await Promise.all([Job.deleteMany({}), User.deleteMany({}), Review.deleteMany({})]);
 
     const insertedJobs = await Job.insertMany(jobs);
     const insertedUsers = await User.insertMany(users);
+    const insertedReviews = await Review.insertMany(reviews(insertedJobs, insertedUsers));
 
-    console.log(`Seed xong: ${insertedJobs.length} jobs, ${insertedUsers.length} users`);
+    console.log(`Seed xong: ${insertedJobs.length} jobs, ${insertedUsers.length} users, ${insertedReviews.length} reviews`);
   } catch (error) {
     console.error("Seed thất bại:", error);
     process.exitCode = 1;

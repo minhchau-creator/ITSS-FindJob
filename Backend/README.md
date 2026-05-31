@@ -3,7 +3,7 @@
 # Cách clone dự án về máy tính
 
 ```c
-   https://github.com/nqk-khanhbk/ITSS2.git
+   https://github.com/minhchau-creator/ITSS-FindJob.git
 ```
 
 # Cách chạy MongoDB local
