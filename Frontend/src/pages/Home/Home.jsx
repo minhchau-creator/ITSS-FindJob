@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
+import { API_BASE } from "../../config";
 
 const responsive = {
   desktop: {
@@ -79,7 +80,7 @@ const Home = () => {
   const fetchNewestJobs = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/v1/jobs?sortKey=startDate&sortValue=desc&limit=10&page=1"
+        `${API_BASE}/jobs?sortKey=startDate&sortValue=desc&limit=10&page=1`
       );
       setNewestJobs(res.data.data);
     } catch (err) {
@@ -95,7 +96,7 @@ const Home = () => {
     if (!authUser?._id) return;
     try {
       const res = await axios.get(
-        `http://localhost:8080/api/v1/users/${authUser._id}`
+        `${API_BASE}/users/${authUser._id}`
       );
       setUser(res.data);
     } catch (err) {
@@ -124,7 +125,7 @@ const Home = () => {
 
     const query = params.toString();
     try {
-      const res = await axios.get(`http://localhost:8080/api/v1/jobs?${query}`);
+      const res = await axios.get(`${API_BASE}/jobs?${query}`);
       setForYouJobs(res.data.data);
     } catch (err) {
       const errorMessage =

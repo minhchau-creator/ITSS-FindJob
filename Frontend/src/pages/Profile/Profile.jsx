@@ -8,6 +8,7 @@ import { Button, TextField, CircularProgress, Snackbar, Alert } from "@mui/mater
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 import PasswordSection from "../../components/PasswordSection/PasswordSection";
+import { API_BASE } from "../../config";
 
 const Profile = () => {
   const { user: authUser, logout } = useAuth();
@@ -67,7 +68,7 @@ const Profile = () => {
       setLoading(true);
       try {
         // Lấy thông tin người dùng
-        const userResponse = await axios.get(`http://localhost:8080/api/v1/users/${userId}`);
+        const userResponse = await axios.get(`${API_BASE}/users/${userId}`);
         
         if (userResponse.data) {
           // Chuyển đổi dữ liệu schedule từ API sang định dạng availability
@@ -104,7 +105,7 @@ const Profile = () => {
         }
         
         // Lấy danh sách danh mục công việc
-        const categoryResponse = await axios.get(`http://localhost:8080/api/v1/users/${userId}/get-category-list`);
+        const categoryResponse = await axios.get(`${API_BASE}/users/${userId}/get-category-list`);
         if (categoryResponse.data) {
           setCategoryOptions(categoryResponse.data);
         }
@@ -201,7 +202,7 @@ const Profile = () => {
       };
       
       // Gửi dữ liệu lên server
-      const response = await axios.post(`http://localhost:8080/api/v1/users/${userId}`, userData);
+      const response = await axios.post(`${API_BASE}/users/${userId}`, userData);
       
       if (response.status === 200) {
         setNotification({

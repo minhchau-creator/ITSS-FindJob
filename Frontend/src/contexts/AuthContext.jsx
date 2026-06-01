@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../config";
 
 const AuthContext = createContext(null);
 
-const API_BASE = "http://localhost:8080/api/v1";
 const TOKEN_KEY = "itss_token";
 const USER_KEY = "itss_user";
 

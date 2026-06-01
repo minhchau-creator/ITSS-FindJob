@@ -13,8 +13,17 @@ const app:Express = express();
 
 const port:string | number = process.env.PORT || 8080;
 
-//Cors
-app.use(cors());
+// CORS: cho phép Vercel domain (set CORS_ORIGIN trong .env, vd "https://itss-findjob.vercel.app")
+// Khi không set → cho phép tất cả (dev mode)
+const corsOrigin = process.env.CORS_ORIGIN;
+app.use(
+  cors({
+    origin: corsOrigin
+      ? corsOrigin.split(",").map((s) => s.trim())
+      : true,
+    credentials: true,
+  })
+);
 app.use(express.json());
 //kết nối với routes
 mainRoutes(app);

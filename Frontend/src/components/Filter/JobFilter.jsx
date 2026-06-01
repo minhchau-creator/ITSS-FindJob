@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./JobFilter.css";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import axios from "axios";
+import { API_BASE } from "../../config";
 
 const JobFilter = ({ onFilterChange, initialFilters = {} }) => {
   // State cho sections mở rộng
@@ -50,7 +51,7 @@ const JobFilter = ({ onFilterChange, initialFilters = {} }) => {
         ]);
         
         // Sử dụng API mới để lấy danh sách category
-        const response = await axios.get("http://localhost:8080/api/v1/users/682b71380c69774bd1f056bd/get-category-list");
+        const response = await axios.get(`${API_BASE}/users/682b71380c69774bd1f056bd/get-category-list`);
         if (response.data) {
           // Thêm "Tất cả" vào danh sách category
           const categoriesWithAll = [{ name: "Tất cả" }, ...response.data.map(cat => ({ name: cat }))];

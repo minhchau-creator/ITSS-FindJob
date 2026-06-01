@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { API_BASE } from "../../config";
 
 import "./SearchBar.css";
 import {
@@ -42,7 +43,7 @@ const SearchBar = ({ gray = false }) => {
 
   const fetchAddresses = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/api/v1/address");
+      const res = await axios.get(`${API_BASE}/address`);
       console.log(res);
       setAddresses(res.data.address);
     } catch (err) {

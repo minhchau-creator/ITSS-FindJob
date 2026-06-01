@@ -11,6 +11,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { TextField, Select, MenuItem, FormControl, Button } from "@mui/material";
 import axios from "axios";
+import { API_BASE } from "../../config";
 
 const JobList = () => {
   useEffect(() => {
@@ -67,7 +68,7 @@ const JobList = () => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/v1/address");
+        const response = await axios.get(`${API_BASE}/address`);
         if (response.data && response.data.address) {
           setAddressOptions(response.data.address);
         }
@@ -127,7 +128,7 @@ const JobList = () => {
         if (sortOption.sortValue) params.append("sortValue", sortOption.sortValue);
         
         // Gọi API với các tham số
-        const response = await axios.get(`http://localhost:8080/api/v1/jobs?${params.toString()}`);
+        const response = await axios.get(`${API_BASE}/jobs?${params.toString()}`);
         
         if (response.data) {
           setJobs(response.data.data || []);

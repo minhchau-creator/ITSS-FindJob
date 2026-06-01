@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import CommentSection from "../../components/CommentSection/CommentSection";
 import StarRating from "../../components/StarRating/StarRating";
+import { API_BASE } from "../../config";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
@@ -43,7 +44,7 @@ const JobDetail = () => {
     const fetchJob = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/v1/jobs/detail/${id}`
+          `${API_BASE}/jobs/detail/${id}`
         );
         console.log("Dữ liệu trả về:", response.data);
         setJob(response.data);
