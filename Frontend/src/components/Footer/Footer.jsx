@@ -12,18 +12,18 @@ const Footer = () => {
             </div>
             <div className="phone">
               <span>Gọi ngay: </span>
-              <span className="phone-number">0969999999</span>
+              <span className="phone-number">093440****</span>
             </div>
             <div className="address">
-              Ngõ 216, Lê Thanh Nghị, Hai Bà Trưng, Hà Nội
+              Số 1 Đại Cồ Việt, Hai Bà Trưng, Hà Nội
             </div>
           </div>
 
           <div className="footer-item">
             <div className="title">Bạn muốn làm gì</div>
             <div className="item">Gia sư</div>
-            <div className="item">Lập trình</div>
-            <div className="item">Ma quỷ</div>
+            <div className="item">Kỹ thuật</div>
+            <div className="item">Kinh tế</div>
           </div>
 
           <div className="footer-item">

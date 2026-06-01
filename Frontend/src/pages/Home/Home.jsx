@@ -163,7 +163,7 @@ const Home = () => {
           </div>
           <SearchBar />
           <div className="banner-text-3">
-            Gợi ý: Gia sư, phục vụ, cộng tác viên lập trình, pháp sư ...
+            Gợi ý: Gia sư, phục vụ, nhân viên ngân hàng...
           </div>
         </div>
       </div>
