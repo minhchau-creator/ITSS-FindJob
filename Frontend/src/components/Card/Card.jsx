@@ -22,8 +22,8 @@ const JOB = {
 };
 
 const formatPrice = (amount) => {
-  if (isNaN(amount)) return "0 đ/buổi";
-  return `${Number(amount).toLocaleString("vi-VN")} đ/buổi`;
+  if (isNaN(amount) || !amount) return "Thỏa thuận";
+  return `${Number(amount).toLocaleString("vi-VN")} đ/tháng`;
 };
 
 const Card = ({ job = {} }) => {
@@ -100,7 +100,7 @@ const Card = ({ job = {} }) => {
           <MonetizationOnIcon />
         </div>
         <div className="job-salary">
-          <div className="salary-vnd">{formatPrice(job.salary)}</div>
+          <div className="salary-vnd">{formatPrice(job.monthlySalary || job.salary)}</div>
           <div className="deadline">
             Còn {calculateDateDifference(job.startDate, job.endDate)} ngày
           </div>

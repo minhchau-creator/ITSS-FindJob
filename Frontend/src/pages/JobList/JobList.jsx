@@ -42,7 +42,7 @@ const JobList = () => {
   
   // State cho bộ lọc
   const [filters, setFilters] = useState({
-    jobType: searchParams.get("jobType")?.split(",") || [],
+    jobType: searchParams.get("jobType")?.split(",") || ["Tất cả"],
     category: searchParams.get("category")?.split(",") || ["Tất cả"],
     jobForm: searchParams.get("jobForm")?.split(",") || ["Tất cả"],
     days: searchParams.get("days")?.split(",") || [],
@@ -108,7 +108,9 @@ const JobList = () => {
         params.append("limit", 6); // Số lượng job trên mỗi trang
         
         // Thêm các tham số lọc - Kiểm tra null/undefined trước khi truy cập .length
-        if (filters.jobType && filters.jobType.length > 0) params.append("jobType", filters.jobType.join(","));
+        if (filters.jobType && filters.jobType.length > 0 && !filters.jobType.includes("Tất cả")) {
+          params.append("jobType", filters.jobType.join(","));
+        }
         if (filters.category && filters.category.length > 0 && !filters.category.includes("Tất cả")) {
           params.append("category", filters.category.join(","));
         }
@@ -244,6 +246,7 @@ const JobList = () => {
       address: job.address || "Không có địa chỉ",
       salary: job.salary || 0,
       salaryUnit: job.salaryUnit || "buổi",
+      monthlySalary: job.monthlySalary || 0,
       startDate: job.startDate || new Date(),
       endDate: job.endDate || new Date(),
       deadline: deadline,

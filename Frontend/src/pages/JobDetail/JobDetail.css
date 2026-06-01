@@ -17,6 +17,35 @@
   align-items: center;
   gap: 20px;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.job-title-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 14px;
+  border: 1px solid;
+}
+
+.job-title-rating.overall {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+}
+
+.job-title-rating.verified {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.job-title-rating .rating-label {
+  color: inherit;
+  opacity: 0.75;
+  font-size: 12px;
 }
 
 .job-title {
@@ -117,9 +146,107 @@
   margin-bottom: 8px;
 }
 
+/* Trạng thái tuyển dụng */
+.recruit-status {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+.recruit-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.recruit-stat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: #faf7ff;
+  border-radius: 8px;
+}
+
+.recruit-stat-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.recruit-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.recruit-progress {
+  height: 10px;
+  background: #e9d5ff;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.recruit-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6300b3, #9b4dff);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.recruit-progress-text {
+  font-size: 13px;
+  color: #555;
+  text-align: right;
+}
+
+/* Liên hệ nhà tuyển dụng */
+.contact-info {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+}
+
+.contact-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-info li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  color: #333;
+}
+
+.contact-info li:last-child {
+  margin-bottom: 0;
+}
+
+.contact-info a {
+  color: #6300b3;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .basic-info {
     flex-direction: column;
+  }
+  .recruit-stats {
+    grid-template-columns: 1fr;
   }
 }

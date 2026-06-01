@@ -15,6 +15,7 @@ import "react-multi-carousel/lib/styles.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
 
 const responsive = {
   desktop: {
@@ -42,6 +43,7 @@ const responsive = {
 const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user: authUser } = useAuth();
   const [newestJobs, setNewestJobs] = useState([]);
   const [forYoujobs, setForYouJobs] = useState([]);
   const [user, setUser] = useState({});
@@ -53,7 +55,7 @@ const Home = () => {
   const handleViewForYouJobs = () => {
     let workingSchedule = "";
     let days = "";
-    if (user.workingSchedule.length > 0) {
+    if (user.workingSchedule && user.workingSchedule.length > 0) {
       workingSchedule = user.workingSchedule
         .map((ws) => `${ws.day}-${ws.period}`)
         .join(",");
@@ -90,9 +92,10 @@ const Home = () => {
   };
 
   const fetchUser = async () => {
+    if (!authUser?._id) return;
     try {
       const res = await axios.get(
-        "http://localhost:8080/api/v1/users/682b71380c69774bd1f056bd"
+        `http://localhost:8080/api/v1/users/${authUser._id}`
       );
       setUser(res.data);
     } catch (err) {
@@ -106,7 +109,7 @@ const Home = () => {
 
   const fetchForYouJobs = async () => {
     let workingSchedule = "";
-    if (user.workingSchedule.length > 0) {
+    if (user.workingSchedule && user.workingSchedule.length > 0) {
       workingSchedule = user.workingSchedule
         .map((ws) => `${ws.day}-${ws.period}`)
         .join(",");
@@ -134,8 +137,11 @@ const Home = () => {
 
   useEffect(() => {
     fetchNewestJobs();
-    fetchUser();
   }, []);
+
+  useEffect(() => {
+    fetchUser();
+  }, [authUser?._id]);
 
   useEffect(() => {
     if (user._id) fetchForYouJobs();
@@ -193,27 +199,40 @@ const Home = () => {
           <div className="job-list-title-container">
             <div className="job-list-title">Công việc phù hợp với bạn</div>
             <div className="job-list-des">
-              Lựa chọn những doanh nghiệp uy tín hàng đầu
+              {authUser
+                ? "Lựa chọn những doanh nghiệp uy tín hàng đầu"
+                : "Đăng nhập để chúng tôi gợi ý công việc phù hợp nhất với bạn"}
             </div>
           </div>
 
-          <div className="job-list">
-            <Carousel
-              className="hover"
-              responsive={responsive}
-              infinite={true}
-              removeArrowOnDeviceType={["minitablet", "mobile"]}
+          {authUser ? (
+            <>
+              <div className="job-list">
+                <Carousel
+                  className="hover"
+                  responsive={responsive}
+                  infinite={true}
+                  removeArrowOnDeviceType={["minitablet", "mobile"]}
+                >
+                  {forYoujobs.length > 0 &&
+                    forYoujobs.map((job, index) => (
+                      <Card key={`for-u-job-${index}`} job={job} />
+                    ))}
+                </Carousel>
+              </div>
+              <div className="view-all-btn" onClick={handleViewForYouJobs}>
+                Xem tất cả
+              </div>
+            </>
+          ) : (
+            <div
+              className="view-all-btn"
+              onClick={() => navigate("/login")}
+              style={{ marginTop: 20 }}
             >
-              {forYoujobs.length > 0 &&
-                forYoujobs.map((job, index) => (
-                  <Card key={`for-u-job-${index}`} job={job} />
-                ))}
-            </Carousel>
-          </div>
-
-          <div className="view-all-btn" onClick={handleViewForYouJobs}>
-            Xem tất cả
-          </div>
+              Đăng nhập ngay
+            </div>
+          )}
         </div>
 
         <div className="favorite-companies">

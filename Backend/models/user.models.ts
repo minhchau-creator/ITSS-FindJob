@@ -1,16 +1,21 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+  googleId: { type: String, unique: true, sparse: true },
+  passwordHash: { type: String, select: false }, // ẩn mặc định khi query, phải .select('+passwordHash') nếu cần
+  avatar: { type: String },
+  profileCompleted: { type: Boolean, default: false },
   name: { type: String, required: true },
-  email: { type: String, unique: true },
+  email: { type: String, unique: true, sparse: true },
+  dateOfBirth: { type: Date },
   address: { type: String },
   phone: { type: String },
   jobType: { type: String },
   jobForm: { type: String },
   university: { type: String },
   major: { type: String },
-  desiredJob: { type: String }, //dec
-  category: { type: String }, //use this from now
+  desiredJob: { type: String },
+  category: { type: String },
   workingSchedule: [
     {
       day: {

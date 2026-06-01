@@ -25,6 +25,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
     const {
       name,
       email,
+      dateOfBirth,
       address,
       phone,
       jobType,
@@ -39,6 +40,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
       {
         name,
         email,
+        dateOfBirth,
         address,
         phone,
         jobType,
@@ -47,6 +49,7 @@ export const updateUserInfo = async (req: Request, res: Response) => {
         major,
         category,
         workingSchedule,
+        profileCompleted: true,
       },
       { new: true, upsert: true }
     );
