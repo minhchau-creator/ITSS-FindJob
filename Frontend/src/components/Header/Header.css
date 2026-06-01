@@ -37,3 +37,62 @@
   color: #6300b3;
   font-weight: bold;
 }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.header-name {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-logout {
+  background: transparent;
+  border: 1px solid #6300b3;
+  color: #6300b3;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.header-logout:hover {
+  background: #6300b3;
+  color: #fff;
+}
+
+.header-login {
+  background: #6300b3;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.header-login:hover {
+  background: #4a008a;
+}

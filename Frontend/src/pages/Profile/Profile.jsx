@@ -6,6 +6,8 @@ import Footer from "../../components/Footer/Footer";
 import defaultAvatar from "../../assets/company-logo.png";
 import { Button, TextField, CircularProgress, Snackbar, Alert } from "@mui/material";
 import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
+import PasswordSection from "../../components/PasswordSection/PasswordSection";
 
 const API_BASE_URL = "http://localhost:8080/api/v1/users";
 // ID người dùng cố định - trong thực tế sẽ lấy từ authentication
@@ -27,10 +29,13 @@ const buildEmptyAvailability = () =>
   }, {});
 
 const Profile = () => {
+  const { user: authUser, logout } = useAuth();
+  // Dữ liệu mặc định cho profile
   const defaultProfile = {
     avatar: defaultAvatar,
     name: "",
     email: "",
+    dateOfBirth: "",
     address: "",
     phone: "",
     major: "",
@@ -90,6 +95,15 @@ const Profile = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  // Danh sách lựa chọn cố định cho các dropdown
+//   const options = {
+//     major: ["Công nghệ thông tin", "Kinh tế", "Ngoại ngữ", "Sư phạm", "Y khoa"],
+//     university: ["Đại học Bách Khoa", "Đại học Kinh tế", "Đại học Ngoại thương", "Đại học Quốc gia"],
+//     jobType: ["Part-Time", "Full-Time", "Freelancer"],
+//     jobForm: ["Internship", "Contract", "Làm thêm"]
+//   };
+  
+  //const userId = authUser?._id;
 
   // Tải thông tin người dùng + các danh sách tùy chọn
   useEffect(() => {
@@ -197,6 +211,7 @@ const Profile = () => {
       const userData = {
         name: profile.name,
         email: profile.email,
+        dateOfBirth: profile.dateOfBirth || null,
         address: profile.address,
         phone: profile.phone,
         jobType: profile.jobType,
@@ -343,6 +358,32 @@ const Profile = () => {
 
             <div className="form-row">
               <div className="form-group">
+                <label>Ngày sinh</label>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  type="date"
+                  value={profile.dateOfBirth || ""}
+                  onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
+                  className="profile-input"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </div>
+              <div className="form-group">
+                <label>&nbsp;</label>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={logout}
+                  style={{ height: 56 }}
+                >
+                  Đăng xuất
+                </Button>
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
                 <label>Địa chỉ</label>
                 <TextField
                   fullWidth
@@ -414,6 +455,8 @@ const Profile = () => {
             </div>
           </div>
         </div>
+
+        <PasswordSection />
       </div>
 
       <Snackbar

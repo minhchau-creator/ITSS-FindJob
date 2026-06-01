@@ -5,6 +5,9 @@ import { spawn } from "child_process";
 import mongoose from "mongoose";
 import Job from "./models/jobs.models";
 import User from "./models/user.models";
+import { calculateMonthlySalary } from "./helper/salary.helper";
+import { hashPassword } from "./helper/password.helper";
+import { extraJobs } from "./data/extra-jobs";
 
 dotenv.config();
 
@@ -118,6 +121,14 @@ const jobs = [
     salaryUnit: "buổi",
     experienceRequired: "Không yêu cầu kinh nghiệm",
     numberOfPeople: "2 người",
+    needCount: 2,
+    hiredCount: 0,
+    applyingCount: 5,
+    contact: {
+      person: "Chị Hương (HR)",
+      email: "hr@smarttutor.vn",
+      phone: "0912 345 678",
+    },
     workingTime: "Thứ 2, Thứ 4, Thứ 6 : 18h00-20h00",
     workingSchedule: [
       { day: "Thứ 2", period: "tối" },
@@ -149,6 +160,14 @@ const jobs = [
     salaryUnit: "ca",
     experienceRequired: "Có kinh nghiệm bán hàng là lợi thế",
     numberOfPeople: "3 người",
+    needCount: 3,
+    hiredCount: 1,
+    applyingCount: 8,
+    contact: {
+      person: "Anh Tuấn (Quản lý cửa hàng)",
+      email: "tuyendung@novastore.vn",
+      phone: "0987 654 321",
+    },
     workingTime: "Thứ 3, Thứ 5, Thứ 7 : 8h00-12h00",
     workingSchedule: [
       { day: "Thứ 3", period: "sáng" },
@@ -180,6 +199,14 @@ const jobs = [
     salaryUnit: "tháng",
     experienceRequired: "Biết React là lợi thế",
     numberOfPeople: "1 người",
+    needCount: 1,
+    hiredCount: 0,
+    applyingCount: 12,
+    contact: {
+      person: "Chị Mai (Talent Acquisition)",
+      email: "career@techflow.com",
+      phone: "0901 234 567",
+    },
     workingTime: "Thứ 2 - Thứ 6 : 9h00-18h00",
     workingSchedule: [
       { day: "Thứ 2", period: "sáng" },
@@ -213,6 +240,14 @@ const jobs = [
     salaryUnit: "tháng",
     experienceRequired: "Biết viết bài chuẩn SEO",
     numberOfPeople: "2 người",
+    needCount: 2,
+    hiredCount: 1,
+    applyingCount: 6,
+    contact: {
+      person: "Anh Khoa (Content Lead)",
+      email: "hr@bluemedia.vn",
+      phone: "0936 789 012",
+    },
     workingTime: "Linh hoạt",
     workingSchedule: [
       { day: "Thứ 2", period: "chiều" },
@@ -244,6 +279,14 @@ const jobs = [
     salaryUnit: "ca",
     experienceRequired: "Giao tiếp tốt",
     numberOfPeople: "1 người",
+    needCount: 1,
+    hiredCount: 0,
+    applyingCount: 3,
+    contact: {
+      person: "Chị Linh (Lễ tân trưởng)",
+      email: "tuyendung@fitzone.vn",
+      phone: "0978 111 222",
+    },
     workingTime: "Thứ 2, Thứ 5, Chủ nhật : 17h00-21h00",
     workingSchedule: [
       { day: "Thứ 2", period: "tối" },
@@ -275,6 +318,14 @@ const jobs = [
     salaryUnit: "tháng",
     experienceRequired: "Có kỹ năng làm việc với máy POS",
     numberOfPeople: "2 người",
+    needCount: 2,
+    hiredCount: 2,
+    applyingCount: 0,
+    contact: {
+      person: "Anh Phong (Cửa hàng trưởng)",
+      email: "hr@minimart.vn",
+      phone: "0945 678 901",
+    },
     workingTime: "Ca xoay",
     workingSchedule: [
       { day: "Thứ 2", period: "sáng" },
@@ -333,8 +384,26 @@ async function seed() {
 
     await Promise.all([Job.deleteMany({}), User.deleteMany({})]);
 
-    const insertedJobs = await Job.insertMany(jobs);
-    const insertedUsers = await User.insertMany(users);
+    const allJobs = [...jobs, ...extraJobs];
+    const jobsWithMonthly = allJobs.map((job) => ({
+      ...job,
+      monthlySalary: calculateMonthlySalary(
+        job.salary,
+        job.salaryUnit,
+        job.workingSchedule
+      ),
+    }));
+
+    // Mọi user mẫu đều có password = "password1"
+    const defaultHash = await hashPassword("password1");
+    const usersWithPassword = users.map((u) => ({
+      ...u,
+      passwordHash: defaultHash,
+      profileCompleted: true, // user mẫu có sẵn full info → đánh dấu complete
+    }));
+
+    const insertedJobs = await Job.insertMany(jobsWithMonthly);
+    const insertedUsers = await User.insertMany(usersWithPassword);
 
     console.log(`Seed xong: ${insertedJobs.length} jobs, ${insertedUsers.length} users`);
   } catch (error) {

@@ -18,10 +18,21 @@ const jobSchema = new mongoose.Schema(
     },
 
     address: { type: String },               // Địa điểm làm việc cụ thể
-    salary: { type: Number },                // Lương (ví dụ 250000 = 250.000đ)
-    salaryUnit: { type: String },            // Ví dụ: "buổi", "giờ", "tháng"
+    salary: { type: Number },                // Lương theo đơn vị gốc (buổi/ca/giờ/tháng)
+    salaryUnit: { type: String },            // "buổi", "ca", "giờ", "tháng"
+    monthlySalary: { type: Number },         // Lương quy đổi /tháng (4 tuần)
     experienceRequired: { type: String },    // Ví dụ: "Không yêu cầu kinh nghiệm"
-    numberOfPeople: { type: String },        // Ví dụ: "1 người"
+    numberOfPeople: { type: String },        // (legacy) Ví dụ: "1 người"
+    needCount: { type: Number, default: 1 },     // Số người cần tuyển
+    hiredCount: { type: Number, default: 0 },    // Số người đã tuyển
+    applyingCount: { type: Number, default: 0 }, // Số người đang ứng tuyển
+
+    contact: {
+      person: { type: String },   // Tên người liên hệ
+      email: { type: String },    // Email nhà tuyển dụng
+      phone: { type: String },    // SĐT nhà tuyển dụng
+    },
+
     workingTime: { type: String },           // Ví dụ: "Thứ 2, Thứ 3, Thứ 5 : 7h30–9h30"
     // ✅ Trường mới
     workingSchedule: [

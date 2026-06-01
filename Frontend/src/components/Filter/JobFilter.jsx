@@ -13,9 +13,9 @@ const JobFilter = ({ onFilterChange, initialFilters = {} }) => {
   
   // State cho bộ lọc
   const [filters, setFilters] = useState({
-    jobType: initialFilters.jobType || [],
-    category: initialFilters.category || [],
-    jobForm: initialFilters.jobForm || [],
+    jobType: initialFilters.jobType || ["Tất cả"],
+    category: initialFilters.category || ["Tất cả"],
+    jobForm: initialFilters.jobForm || ["Tất cả"],
     days: initialFilters.days || [],
     minSalary: initialFilters.minSalary || "",
     maxSalary: initialFilters.maxSalary || "",
@@ -36,6 +36,7 @@ const JobFilter = ({ onFilterChange, initialFilters = {} }) => {
       try {
         // Tạm thời sử dụng mẫu cho job types và job forms
         setJobTypes([
+          { name: "Tất cả" },
           { name: "Freelancer" },
           { name: "Full-Time" },
           { name: "Part-Time" }
@@ -95,26 +96,46 @@ const JobFilter = ({ onFilterChange, initialFilters = {} }) => {
   // Xử lý khi thay đổi loại công việc
   const handleJobTypeChange = (type) => {
     let newJobTypes = [...(filters.jobType || [])];
-    
+
+    if (type === "Tất cả") {
+      // Chọn "Tất cả" → bỏ hết các lựa chọn khác (và xóa days/available vì hết ràng buộc Part-Time)
+      setFilters({
+        ...filters,
+        jobType: ["Tất cả"],
+        days: [],
+        available: []
+      });
+      return;
+    }
+
+    // Nếu đang có "Tất cả", bỏ nó ra khi chọn item cụ thể
+    if (newJobTypes.includes("Tất cả")) {
+      newJobTypes = newJobTypes.filter(item => item !== "Tất cả");
+    }
+
     if (newJobTypes.includes(type)) {
-      // Nếu đã chọn, bỏ chọn
+      // Bỏ chọn
       newJobTypes = newJobTypes.filter(item => item !== type);
-      
+
       // Nếu loại bỏ Part-Time, cũng xóa tất cả các ngày đã chọn
       if (type === "Part-Time") {
-        setFilters({ 
-          ...filters, 
-          jobType: newJobTypes,
+        setFilters({
+          ...filters,
+          jobType: newJobTypes.length === 0 ? ["Tất cả"] : newJobTypes,
           days: [],
           available: []
         });
         return;
       }
     } else {
-      // Nếu chưa chọn, thêm vào
       newJobTypes.push(type);
     }
-    
+
+    // Nếu không còn lựa chọn nào, gán lại "Tất cả"
+    if (newJobTypes.length === 0) {
+      newJobTypes = ["Tất cả"];
+    }
+
     setFilters({ ...filters, jobType: newJobTypes });
   };
   
@@ -228,7 +249,7 @@ const JobFilter = ({ onFilterChange, initialFilters = {} }) => {
   // Xử lý khi nhấn nút Xóa tất cả
   const handleClearAll = () => {
     const emptyFilters = {
-      jobType: [],
+      jobType: ["Tất cả"],
       category: ["Tất cả"],
       jobForm: ["Tất cả"],
       days: [],

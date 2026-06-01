@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.ts",
-    "seed": "ts-node seed.ts",
+    "start": "set NODE_OPTIONS=--use-system-ca && nodemon index.ts",
+    "seed": "set NODE_OPTIONS=--use-system-ca && ts-node seed.ts",
+    "add-jobs": "set NODE_OPTIONS=--use-system-ca && ts-node scripts/add-jobs.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -16,10 +17,15 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongodb": "^7.2.0",
+    "google-auth-library": "^10.6.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.14.2",
     "nodemon": "^3.1.10"
   }

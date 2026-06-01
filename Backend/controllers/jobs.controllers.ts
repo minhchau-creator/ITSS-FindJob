@@ -59,11 +59,11 @@ export const index = async (req: Request, res: Response) => {
     }
 
 
-    // Lọc theo mức lương
+    // Lọc theo mức lương (so sánh theo lương quy đổi /tháng)
     if (req.query.minSalary || req.query.maxSalary) {
-      find.salary = {};
-      if (req.query.minSalary) find.salary.$gte = Number(req.query.minSalary);
-      if (req.query.maxSalary) find.salary.$lte = Number(req.query.maxSalary);
+      find.monthlySalary = {};
+      if (req.query.minSalary) find.monthlySalary.$gte = Number(req.query.minSalary);
+      if (req.query.maxSalary) find.monthlySalary.$lte = Number(req.query.maxSalary);
     }
     // Lọc theo các ngày làm việc
     if (req.query.days) {
@@ -84,7 +84,9 @@ export const index = async (req: Request, res: Response) => {
     // sắp xếp theo sortkey và sortvalue tương ứng
     const sort: Record<string, any> = {};
     if (req.query.sortKey && req.query.sortValue) {
-      const sortKey = req.query.sortKey.toString();
+      let sortKey = req.query.sortKey.toString();
+      // Sắp xếp theo lương → dùng lương quy đổi /tháng cho nhất quán
+      if (sortKey === "salary") sortKey = "monthlySalary";
       sort[sortKey] = req.query.sortValue;
     }
     //end sort
