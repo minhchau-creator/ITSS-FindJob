@@ -35,17 +35,16 @@ const Footer = () => {
 
           <div className="footer-item">
             <div className="title">Người phát triển</div>
-            <div className="item">Lưu Việt Hoàn</div>
-            <div className="item">Hà Đình Nam</div>
-            <div className="item">Vũ Minh Quân</div>
-            <div className="item">Vũ Thị Quỳnh Như</div>
-            <div className="item">Nguyễn Quốc Khánh</div>
-            <div className="item">Phạm Hoàng Hải Nam</div>
-            <div className="item">Phạm Nhật Anh</div>
+            <div className="item">Mai Văn Đăng</div>
+            <div className="item">Vũ Quyền Gia Linh</div>
+            <div className="item">Phạm Hoàng Minh Châu</div>
+            <div className="item">Nguyễn Đức Trường</div>
+            <div className="item">Vũ Ngọc Lâm</div>
+            <div className="item">Nguyễn Sĩ Anh Đức</div>
           </div>
         </div>
 
-        <div className="footer-bottom">@2025 Tạo bởi nhóm Sora_ITSS2</div>
+        <div className="footer-bottom">@2026 made by バサウチーム</div>
       </div>
     </div>
   );
