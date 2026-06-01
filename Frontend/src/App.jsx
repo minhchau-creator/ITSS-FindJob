@@ -7,9 +7,11 @@ import { GOOGLE_CLIENT_ID } from "./config";
 import Home from "./pages/Home";
 import JobDetail from "./pages/JobDetail";
 import JobList from "./pages/JobList";
+// solve conflict
 import Profile from "./pages/Profile";
-import Login from "./pages/Login/Login";
-import CompleteProfile from "./pages/CompleteProfile/CompleteProfile";
+import Login from "./pages/Login";
+import CompleteProfile from "./pages/CompleteProfile";
+
 
 const App = () => {
   return (

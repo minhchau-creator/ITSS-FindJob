@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Job from '../models/jobs.models';
 import { paginationHelper } from "../helper/pagination.helper";
 import { SearchHelper } from "../helper/search.helper";
+import mongoose from "mongoose";
 //[GET]/api/v1/jobs
 export const index = async (req: Request, res: Response) => {
   try {
@@ -70,20 +71,18 @@ export const index = async (req: Request, res: Response) => {
       find.workingTime = { $regex: days.join('|'), $options: 'i' }; // Tìm bất kỳ ngày nào có trong workingTime
     }
 
-    // Đếm số lượng job phù hợp
-    const countJobs = await Job.countDocuments(find);
     // Phân trang
-    console.log(req.query)
+    const totalJobs = await Job.countDocuments(find);
     const objectPagination = paginationHelper(
       {
         currentPage: 1,
         limitItems: parseInt(req.query.limit as string) || 30
       },
       req.query,
-      countJobs
+      totalJobs
     );
     // sắp xếp theo sortkey và sortvalue tương ứng
-    const sort = {};
+    const sort: Record<string, any> = {};
     if (req.query.sortKey && req.query.sortValue) {
       let sortKey = req.query.sortKey.toString();
       // Sắp xếp theo lương → dùng lương quy đổi /tháng cho nhất quán
@@ -134,16 +133,15 @@ export const index = async (req: Request, res: Response) => {
         },
       };
     }
-    const count = await Job.countDocuments(find);
     // Truy vấn danh sách job
     const jobs = await Job.find(find).sort(sort)
       .limit(objectPagination.limitItems)
-      .skip(objectPagination.skip);
+      .skip(objectPagination.skip || 0);
 
     res.status(200).json({
       data: jobs,
       pagination: objectPagination,
-      countJobs: count
+      total: totalJobs
     });
   } catch (error) {
     console.error("Job Index Error:", error);
@@ -154,14 +152,25 @@ export const index = async (req: Request, res: Response) => {
 export const detail = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    // console.log(id);
-    const task = await Job.findOne({
+
+    // Kiểm tra định dạng ID trước khi truy vấn
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({ message: "ID công việc không đúng định dạng!" });
+      return;
+    }
+
+    const job = await Job.findOne({
       _id: id,
       deleted: false
     });
-    res.json(task);
-  } catch (error) {
-    res.status(404).json({ mesage: "Lỗi không lấy được chi tiết công việc!" });
-  }
 
+    if (!job) {
+      res.status(400).json({ message: "Đầu vào sai: Công việc không tồn tại hoặc đã bị xóa!" });
+      return;
+    }
+
+    res.status(200).json(job);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi hệ thống khi lấy chi tiết công việc!" });
+  }
 }
